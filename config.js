@@ -1,1 +1,1 @@
-config.js
+next.config.js
