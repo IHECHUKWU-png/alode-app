@@ -1,0 +1,1 @@
+export default function Guidelines(){ return (<main style={{padding:"20px",fontFamily:"sans-serif",maxWidth:"600px",margin:"0 auto"}}><h1>Community Guidelines</h1><p>Be real. Be safe. Be respectful. No violence, hate, harassment, minor sexual content - ZERO TOLERANCE. Anyone can report anyone including Admins.</p><a href="/">Back</a></main>); }
