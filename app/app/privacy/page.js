@@ -1,0 +1,1 @@
+export default function Privacy(){ return (<main style={{padding:"20px",fontFamily:"sans-serif",maxWidth:"600px",margin:"0 auto"}}><h1>Privacy Policy</h1><p>We collect Account, Content, Usage, Financial data. We do NOT store full card details - Flutterwave does. We do NOT sell personal data. Contact support@alode.com.</p><a href="/">Back</a></main>); }
