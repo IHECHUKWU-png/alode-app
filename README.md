@@ -1,126 +1,59 @@
-# BIAFA - Connect. Create.chat. Share. Earn.
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BIAFA - Connect. Create. Chat. Share. Earn.</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#f6f0ff;color:#111}
+header{background:linear-gradient(90deg,#0B6E4F,#2563EB);color:#fff;padding:12px;display:flex;justify-content:space-between;position:sticky;top:0;z-index:30}
+button{border:0;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}
+.btn{background:#0B6E4F;color:#fff}.btn2{background:#fff;border:1px solid #ddd}.btnO{background:#F97316;color:#fff}.btnP{background:#fe2c55;color:#fff}
+.card{background:#fff;border-radius:16px;padding:14px;margin:10px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+input,select,textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:10px;margin:5px 0;font-size:14px}
+.tabs{display:flex;gap:6px;padding:8px;overflow:auto;background:#fff;position:sticky;top:46px;z-index:20}.tab{background:#eee;white-space:nowrap}.tab.active{background:#0B6E4F;color:#fff}
+.hidden{display:none}.small{font-size:12px;color:#666}.flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.avatar{width:38px;height:38px;border-radius:50%;background:#0B6E4F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.post{border-top:1px solid #eee;padding:12px 0}.post img{width:100%;border-radius:12px;max-height:300px;object-fit:cover}
+.vid{background:#111;color:#fff;border-radius:16px;margin:10px;overflow:hidden}.vid video{width:100%;height:400px;object-fit:cover;background:#000}.vidInfo{padding:12px}
+.giftBtn{background:#fff3cd;border:1px solid #F97316}.pill{background:#dcfce7;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.chamber{border:2px solid #F97316;background:#fff7ed}
+</style></head><body>
+<header><b>BIAFA 🌍</b><span id="top" style="font-size:12px"></span><span id="dbStatus" style="font-size:11px;background:#000;padding:4px 8px;border-radius:20px">● CHECKING...</span></header>
+<div class="card" style="background:#fff3cd">🌍 BIAFA REAL V1 - Connect. Create. Chat. Share. Earn. • Supabase = Database • Cloudinary = Videos/Photos • Flutterwave = Real Money • Cloudflare = Speed + Security + biafa.com • 60% Creator / 40% BIAFA on NET • Facebook + TikTok Combined, BIAFA Own Look</div>
+<div class="card"><b>Connection Status:</b> <span id="statusLine">Loading...</span><p class="small">V1 Netlify Drop = 7 core screens: Auth, Home, For You, Wallet, Creator, Profile, Super Admin Chamber. Remaining pages in V2 Next.js.</p></div>
 
-## OWNER RULE
-Owner = Super Admin. ONLY Owner can access secrets, change commission, approve payouts, promote Admins, view full financial logs.
+<div id="auth" class="card"><h2>BIAFA - REAL Global Earn</h2><p class="small">13+ to join • 18+ to earn/gifts/withdraw • Real accounts work on any phone once Supabase is connected.</p><button class="btn" onclick="show('l')">LOGIN</button> <button class="btn2" onclick="show('r')">REGISTER</button>
+<div id="lBox"><h3>Login</h3><input id="lu" placeholder="Username"><input id="lp" type="password" placeholder="Password"><button class="btn" onclick="login()">Login</button><p class="small">Owner: biafa_owner / Owner123! - Change in Super Admin Chamber - 2FA Required for Owner</p></div>
+<div id="rBox" class="hidden"><h3>Register Global</h3><input id="fn" placeholder="Full Name"><input id="ru" placeholder="Username"><input id="em" placeholder="Email"><input id="ph" placeholder="Phone"><input id="rp" type="password" placeholder="Password"><input id="dob" type="date"><select id="atype"><option>Personal</option><option>Creator</option><option>Business</option></select><select id="rc"><option>Nigeria 🇳🇬 - NGN</option><option>Ghana 🇬🇭 - GHS</option><option>Kenya 🇰🇪 - KES</option><option>South Africa 🇿🇦 - ZAR</option><option>USA 🇺🇸 - USD</option><option>UK 🇬🇧 - GBP</option><option>Canada 🇨🇦 - CAD</option><option>India 🇮🇳 - INR</option><option>Other 🌍 - USD</option></select><select id="lang"><option>English</option><option>Pidgin</option><option>Igbo</option><option>Hausa</option><option>Yoruba</option></select><input id="ref" placeholder="Referral Code = Username of inviter (optional)"><label class="small"><input type="checkbox" id="age" style="width:auto"> I am 13+ (18+ to earn). I agree to Terms, Privacy, Guidelines.</label><button class="btn" onclick="register()">Create REAL Account + $0.20 Bonus</button></div></div>
 
-## APP SPEC - FULL
-BIAFA has it's own look different from Facebook and TikTok. Genuine, fully functional, not demo.
-Tech: Next.js, React, TypeScript, Tailwind, Node.js, PostgreSQL, Prisma, Redis, BullMQ, Meilisearch, Cloudinary, Mux/Agora, Fluterwave/PayPal/local banks,
+<div id="app" class="hidden">
+<div class="tabs"><button class="tab active" onclick="tab('foryou',this)">🎵 For You</button><button class="tab" onclick="tab('feed',this)">📘 Home Feed</button><button class="tab" onclick="tab('wallet',this)">💰 Wallet</button><button class="tab" onclick="tab('creator',this)">📊 Creator</button><button class="tab" onclick="tab('profile',this)">👤 Profile</button><button class="tab" onclick="tab('admin',this)" id="adminTab" style="display:none">👑 Super Admin Chamber</button><button class="tab" onclick="logout()">Logout</button></div>
 
-## ROLES
-Super Admin > Admin > Moderator > Finance Officer > Support > User. Lower CANNOT ban/suspend/delete higher. Super Admin cannot be deleted except by itself. Must use 2FA. First public registrant does NOT become Super Admin.
+<div id="foryou"><div class="card"><b>🎵 For You - Full-screen vertical, Swipe, Auto-play - UNLIMITED Free Videos/Day</b><p class="small">FREE: Ads every 3-5 videos, Unlimited videos/day, SD, no downloads. PAID (Data Pass): No ads, HD, download, early access. Paid videos boosted on FYP for duration of Data Pass: Daily=1 day, Weekly=7 days, Monthly=30 days. Paid = 50% FYP slots, Free = 50%.</p><button class="btnP" onclick="uploadCloudinary('video')">📹 Upload REAL Video via Cloudinary</button><button class="btn2" onclick="uploadCloudinary('image')">🖼️ Upload Photo via Cloudinary</button><input id="vidUrl" placeholder="Or paste video mp4 link"><input id="vidCap" placeholder="Caption + #hashtags"><button class="btn" onclick="addVideo()">+ Post Video + $0.10</button></div><div id="forYouList"></div></div>
+<div id="feed" class="hidden"><div class="card"><h3>📘 Home Feed - For You / Following / Friends / Latest / Trending</h3><textarea id="pt" placeholder="What's on your mind?"></textarea><input id="pimg" placeholder="Image link - or use Cloudinary upload above"><select id="vis"><option>Public</option><option>Friends</option><option>Followers</option><option>Private</option></select><button class="btn" onclick="post()">Post + $0.05</button></div><div class="card"><div id="posts"></div></div></div>
 
-## REGISTRATION
-Full name, Username, Email, Phone, Password, DOB, Profile photo, Account type: Personal, Creator, Business. 13+ to register. 18+ to earn, gifts, withdraw. Languages: English + Pidgin + Igbo + Hausa + Yoruba.
+<div id="wallet" class="hidden"><div class="card"><h3>💰 Wallet - NOT A BANK</h3><h1 id="bal">$0.00</h1><p class="small">Available, Pending, Total Earnings, Deposits, Withdrawals, History. Every transaction: Unique ID, User ID, Reference, Amount, Currency, Type, Status, Timestamp. Immutable double-entry ledger. Never manual balance change. Net = Gross - Flutterwave/PayPal/Local Bank Fee - Refunds - Reversals - Legal Deductions. ADMIN = Net x 40%. CREATOR = Net x 60%. Ex: ₦10,000 - ₦150 = ₦9,850 Net. Admin ₦3,940. Creator ₦5,910. Ex: ₦100,000 Net = Admin ₦40,000 Creator ₦60,000. Apply to Gifts, Tips, Paid Creator Subscriptions, Eligible Paid Content, Agreed Creator Ads. NOT to wallet deposits, coin purchases, refunds, platform Premium, full ad payments. Per-View NOT split again. Calculate in kobo/cents. Never deduct twice. Never split unverified. Ledger reversals for refunds. Preserve historical rate.</p>
+<h4>Fund Wallet - REAL Flutterwave/PayPal/Local Bank</h4><input id="fundAmt" type="number" placeholder="Amount"><select id="fundCur"><option value="NGN">NGN ₦</option><option value="USD">USD $</option><option value="GHS">GHS GH₵</option><option value="KES">KES KSh</option><option value="ZAR">ZAR R</option></select><button class="btnO" onclick="fundReal()">Pay with Flutterwave (REAL)</button><p class="small" id="fwStatus"></p>
+<h4>Virtual Coins - No cash value until eligible activity, non-refundable</h4><button class="btn2" onclick="buyCoins(100,1)">100 Coins - $1</button> <button class="btn2" onclick="buyCoins(500,4)">500 Coins - $4</button> Coins: <b id="coins">0</b>
+<h4>Gifts - Creator 60% NET - Final unless fraud</h4><div class="flex"><button class="giftBtn" onclick="gift('❤️ Heart',1)">❤️ Heart $1</button><button class="giftBtn" onclick="gift('🌹 Rose',2)">🌹 Rose $2</button><button class="giftBtn" onclick="gift('⭐ Star',5)">⭐ Star $5</button><button class="giftBtn" onclick="gift('💎 Diamond',10)">💎 Diamond $10</button></div>
+<h4>Subscriptions - Monthly/Quarterly/Yearly - Creator 60% NET</h4><div class="flex"><button class="btn2" onclick="sub('Monthly $4.99')">Monthly $4.99</button><button class="btn2" onclick="sub('Quarterly $12.99')">Quarterly $12.99</button><button class="btn2" onclick="sub('Yearly $49.99')">Yearly $49.99</button></div>
+<h4>BIAFA Premium - 100% BIAFA</h4><button class="btn" onclick="premium()">Buy Premium $9.99/mo</button>
+<h4>BIAFA DATA PASS - 60% Creator Pool / 40% BIAFA - NOT MTN/Airtel Internet</h4><p class="small">Nigeria: Daily ₦200 / Weekly ₦1000 / Monthly ₦3500. Ghana: GH₵5 / 25 / 80. USA/UK/Canada: $0.99 / $4.99 / $9.99. Kenya: KSh 50/250/800. SA: R10/50/150. Rest: USA price USD. Data Pass is BIAFA subscription, NOT internet data from MTN/Airtel. Later, 50k+ users, integrate MTN/Airtel Sponsored Data OPTIONAL, NOT required to launch.</p><div class="flex"><button class="btn2" onclick="buyPass('Daily')">Daily</button><button class="btn2" onclick="buyPass('Weekly')">Weekly</button><button class="btn2" onclick="buyPass('Monthly')">Monthly</button></div>
+<h4>Withdraw - Min ₦5,000 Nigeria / $10 Rest of World • KYC NIN/BVN/Gov ID • 18+ • Admin Approval • Up to 7 business days • Fee deducted from Creator 60%</h4><input id="wdAmt" type="number" placeholder="Amount"><input id="wdAcct" placeholder="Bank / Mobile Money + Account + Name"><select id="wdMethod"><option>Flutterwave - Bank</option><option>Flutterwave - Mobile Money</option><option>PayPal / Wise</option><option>Local Bank Transfer</option></select><button class="btn" onclick="withdraw()">Request Withdrawal (REAL)</button><div id="wdList"></div><h4>Ledger - Immutable</h4><div id="txList"></div></div></div>
 
-## SOCIAL
-Posts, Photos, Multiple photos, Videos, Links, Edit, Delete, Like, Emoji react, Comment, Reply, Share, Save, Mention, Hashtags, Tag friends, Visibility: Public, Friends, Followers, Private. Feed: For You, Following, Friends, Latest, Trending.
+<div id="creator" class="hidden"><div class="card"><h3>📊 Creator Dashboard</h3><p>Followers: <b id="cFol">0</b> • Views: <b id="cViews">0</b> • Free Views: <b id="cFree">0</b> • Paid Views: <b id="cPaid">0</b></p><p>Gross: <b id="cGross"></b> • Fee: <b id="cFee"></b> • Net: <b id="cNet"></b> • BIAFA 40%: <b id="cAdmin"></b> • YOU 60%: <b id="cYou"></b></p><p class="small"><b>14B PER-VIEW - ESTIMATE ONLY. Final pay is from Global Pool every Monday.</b> Qualified View = 30s+ short, 1m+ long, unique verified user, no self-view, no bot, no VPN. One view per user per video per 24h. Tier 1 New: ₦200/1000 = ₦0.20/view. Tier 2 10k followers: ₦500/1000 = ₦0.50/view. Tier 3 100k+/Verified: ₦1000/1000 = ₦1/view. Example: 100k views Tier 2 = ₦50,000 ESTIMATE. 7 days hold. Daily cap ₦50,000. Unlock: 10k followers + 60k mins in 90 days + No violations.</p><p class="small"><b>14E FREE vs PAID:</b> Formula: (Free Views/1000 x ₦200) + (Paid Views/1000 x ₦500). Example: 80k free = ₦16,000 + 20k paid = ₦10,000 = ₦26,000 total ESTIMATE.</p><p class="small"><b>14G WATCH DATA REDIRECTION - CORE:</b> Normal: User buys data from MTN/Airtel/Glo -> Telco keeps 100% -> Creator gets ₦0. BIAFA: User buys Data Pass inside BIAFA via local banks -> Money goes to ONE Global BIAFA Pool, NOT to telco -> BIAFA 40% / Creator Pool 60% -> Creators paid by views. Formula: Creator Pay = (Creator Qualified Views / Total Qualified Views That Week) x Global Creator Pool. Example Week: 10,000 users x ₦1000 = ₦10,000,000 Total. BIAFA ₦4,000,000. Pool ₦6,000,000. Total Views 1,000,000. Creator A 200k views = 20% = ₦1,200,000. Creator B 100k = 10% = ₦600,000. Creator C 50k = 5% = ₦300,000. No views = ₦0. Views = Money. Every Monday 00:00, auto job calculates and credits Wallet as "Data Pass Earnings". Never send Data Pass money to telco. Goes to DataPassPool table.</p><p class="small"><b>14D GLOBAL:</b> All revenue into ONE Global Creator Pool. Example: 5000 Nigerians ₦1000 = ₦5,000,000 + 2000 Americans $4.99 = $9,980 + 1000 Ghanaians GH₵25 = GH₵25,000. All into ONE pool. BIAFA 40%, Pool 60%. Creators paid by views, not viewer country.</p><p>Your Data Pass Earnings This Week: <b id="poolEarn">₦0 - From 0 Views - Share 0%</b></p><button class="btn" onclick="claimPerView()">Claim Per-View Earnings (Estimate)</button><p class="small">Verification: 10k+ followers + ID + No violations 90 days. Monetization: 10k+ + 60k mins 90 days + No violations. Live: 1k+ + 30 days + No violations 30 days.</p></div></div>
+<div id="profile" class="hidden"><div class="card"><h3>👤 Profile</h3><div class="flex"><div class="avatar" id="pAvatar">B</div><div><b id="pName"></b><p class="small" id="pCountry"></p></div><span class="pill" id="pBadge">New Creator</span></div><p>Followers: <b id="pFol">0</b> • Posts: <b id="pPosts">0</b> • Balance: <b id="pBal"></b></p><p class="small">Photo, Cover, Bio, Website, Location, Followers, Following, Views, Likes, Posts, Videos, Verification, Creator Wallet. Full profiles in V2.</p><div id="myPosts"></div></div></div>
 
-## VIDEO SYSTEM
-Full-screen vertical, Swipe, Auto-play, Like, Comment, Share, Follow, Save, Report, Hashtags, View counts. Upload, Captions, Thumbnails, Compression, Progress, Privacy.
+<div id="admin" class="hidden"><div class="card chamber"><h3>👑 SUPER ADMIN CHAMBER - OWNER ONLY - PUBLIC KEYS ONLY</h3><p class="small">⚠️ NEVER paste SECRET keys here. Frontend can be inspected. Only PUBLIC keys in this Chamber. SECRET keys go in Backend / Supabase Edge Function in V2 only. Lower CANNOT ban/suspend/delete higher. Super Admin cannot be deleted except by itself. Must use 2FA. First public registrant does NOT become Super Admin.</p>
+<h4>1. SUPABASE - Database - PUBLIC ONLY</h4><input id="cfgSupaUrl" placeholder="Supabase Project URL - e.g https://xyz.supabase.co"><input id="cfgSupaKey" placeholder="Supabase anon PUBLIC key ONLY - Never service_role key"><button class="btn" onclick="saveSupabase()">Connect Supabase + Test</button><p class="small" id="supaTest"></p>
+<h4>2. CLOUDINARY - Videos / Photos - PUBLIC ONLY</h4><input id="cfgCloudName" placeholder="Cloudinary Cloud Name"><input id="cfgCloudPreset" placeholder="Upload Preset UNSIGNED - e.g biafa_upload"><p class="small">No API Secret here. Use UNSIGNED preset in Cloudinary > Settings > Upload > Add Upload Preset > Unsigned.</p><button class="btn" onclick="saveCloudinary()">Save Cloudinary</button><p class="small" id="cloudTest"></p>
+<h4>3. FLUTTERWAVE - Real Money - PUBLIC ONLY - YOU CONNECT</h4><input id="cfgFwPub" placeholder="Flutterwave PUBLIC Key ONLY - FLWPUBK-..."><input id="cfgFwLink" placeholder="Flutterwave Payment Link for Data Pass - e.g https://flutterwave.com/pay/biafa..."><input id="cfgFwLink2" placeholder="Flutterwave Payment Link for Wallet Funding (optional)"><p class="small">NEVER paste Flutterwave SECRET Key, Secret Hash, or PayPal Secret here. Use Payment Links for V1. Secrets in V2 Backend only.</p><button class="btnO" onclick="saveFlutterwave()">Save Flutterwave PUBLIC (Private)</button><p class="small" id="fwTest"></p>
+<h4>4. CLOUDFLARE - Domain + Speed + Security - RECORD ONLY</h4><input id="cfgDomain" placeholder="Your domain - e.g biafa.com"><input id="cfgCfNs" placeholder="Cloudflare Nameservers - e.g ns1.cloudflare.com, ns2..."><p class="small">Cloudflare has no connect button. Steps: Cloudflare.com > Add Site > Copy 2 Nameservers > Paste at domain registrar > In Cloudflare DNS > Add CNAME www → your-netlify-link.netlify.app > Proxy ON > SSL = Full.</p><button class="btn2" onclick="saveCloudflare()">Save Cloudflare Domain</button><p class="small" id="cfTest"></p>
+<h4>5. Commission + Owner - ONLY Super Admin</h4><input id="commPct" type="number" value="40"><button class="btn2" onclick="saveComm()">Save Commission % (Default 40%)</button><br><br><input id="np" placeholder="New Owner Password - 8+ chars"><button class="btn" onclick="changePass()">Change Owner Password</button><label class="small"><input type="checkbox" checked style="width:auto"> Owner 2FA ON (Required)</label>
+<h4>Admin Financial Dashboard</h4><p>Total revenue: <b id="aRev"></b> • Admin 40%: <b id="aComm"></b> • Creator 60%: <b id="aCreat"></b> • Users: <b id="aU"></b> • Withdraw Pending: <b id="aW"></b></p><p class="small">Total, Admin commission, Creator earnings, Payment volume, Deposits, Withdrawals, Pending, Successful, Failed, Refunds, Chargebacks, Fees, Daily/Weekly/Monthly/Yearly. Charts, Search, Filters, Export CSV/PDF in V2. Commission settings here.</p><h4>All Users Worldwide</h4><div id="allU"></div><h4>Withdraw Approvals - Pay via Flutterwave Dashboard > Transfers</h4><div id="allW"></div><h4>Audit Log - Private to Super Admin</h4><div id="audit"></div></div></div>
+</div>
+<div class="card small"><b>BIAFA V1 CORRECTED - Terms Last Updated: Nov 11, 2026. Company: BIAFA. Contact: support@biafa.com. 13+ to join, 18+ to earn.</b> You own content, give BIAFA license to display. No impersonation, spam, hacking, fake followers/views, illegal, fraud, money laundering. Coins virtual, no cash value until eligible activity, non-refundable except where law requires. Gifts final unless fraud. Subscriptions via Flutterwave/PayPal/Local Bank Payment Link + manual reminder. Premium 100% BIAFA. Data Pass is NOT MTN/Airtel data. Earnings 40/60 on Net only. Wallet NOT bank. Funds via Flutterwave/PayPal/Local Banks/Licensed Partner. Min ₦5,000 Nigeria / $10 Rest. 18+ KYC NIN/BVN/Gov ID. Admin approval. Up to 7 business days. Fee deducted from Creator 60%. Termination, Liability max = amount paid in last 12 months. <b>Governing Law: Federal Republic of Nigeria. For users outside Nigeria, local consumer law also applies.</b><br><br><b>Privacy:</b> Collect Account, Content, Usage, Financial. We do NOT store full card details - Flutterwave/PayPal/Local Bank does. Share with Flutterwave/PayPal/Local Bank, Cloudinary, Legal Authorities when required. We do NOT sell personal data. Rights NDPC/GDPR: Access, Correct, Delete, Download. Retention: Financial/audit logs up to 7 years. Children 13+.<br><br><b>Guidelines:</b> Be real, safe, respectful. No violence, hate, harassment, self-harm, dangerous acts, nudity/sexual, minor safety ZERO TOLERANCE, exploitation, spam, fake engagement, illegal goods, copyright, privacy/hacking. Penalties: 1st Warning + Remove, 2nd-3rd Block 1-7 days, Severe/Repeated Permanent Ban. Appeal Settings > Help > Appeal within 7 days. Anyone can report anyone incl. Admins. Admin reports reviewed by Super Admin only.<br><br><b>14F WHY BIAFA BEATS TIKTOK & FACEBOOK:</b> TikTok: Free+Ads+Fund $0.50-$1/1000 + Gifts 50/50. No Data Pass. No limit. Facebook: Free+Ads+In-Stream 55% + Stars 70% + Subscriptions. No Data Pass. No limit. BIAFA: Free+Ads+Per-View+Gifts 60/40+Subscriptions+Data Pass+Unlimited videos/day. In Africa data is expensive. Data Pass ₦200 feels like buying data. BIAFA gives 60%, better than TikTok 50% and Facebook 55%.<br><br><b>Security:</b> Argon2/bcrypt, Secure sessions, RBAC, Validation, SQL injection, XSS, CSRF, Rate limiting, Secure uploads, Webhook signature verification, Payment verification, Idempotency, Immutable logs, Encryption, Secrets management, Backup, Privacy, Deletion, Audit trails, Appeal. NDPC, GDPR. Legal review before real-money launch. Licensed payment/payout arrangement. <b>Messages:</b> Messages stored securely in Supabase, encrypted at rest by Supabase. End-to-end encryption in V2. <b>Testing:</b> Financial test: ₦10,000 - ₦150 = ₦9,850 Net. Admin ₦3,940, Creator ₦5,910, Combined ₦9,850. Per-View test: 100k views Tier 2 = ₦50,000 ESTIMATE. Free 80k x ₦200/1000 = ₦16,000 + Paid 20k x ₦500/1000 = ₦10,000 = ₦26,000 total ESTIMATE. © 2026 BIAFA support@biafa.com</div>
 
-## STORIES + LIVE
-Stories: Image, Video, Text, Stickers, Replies, Reactions, Viewer lists, Highlights, 24h expire.
-Live: Mux/Agora, Comments, Viewer counts, Reactions, Gifts. Rules: 1000+ followers, 30+ days old, No violations 30 days.
-
-## FRIENDS + GROUPS
-Friend requests, Follow/unfollow, Block, Mute, Restrict, Suggested users. Groups: Create, Join, Leave, Public, Private, Moderators.
-
-## MESSAGING
-1-to-1, Group, Text, Images, Videos, Voice notes, Reactions, Replies, Typing, Online, Read receipts, Delete, Search. Encrypted at rest.
-
-## NOTIFICATIONS
-Likes, Comments, Followers, Mentions, Messages, Gifts, Earnings, Withdrawals, Payment failures, Announcements.
-
-## PROFILES
-Photo, Cover, Bio, Website, Location, Followers, Following, Views, Likes, Posts, Videos, Verification, creators wallet.
-
-## SEARCH
-People, Posts, Videos, Hashtags, Creators, Groups, Businesses. Meilisearch. Trending videos, creators, hashtags.
-
-## WALLET - NOT A BANK
-Available, Pending, Total earnings, Deposits, Withdrawals, History. Every transaction: Unique ID, User ID, Reference, Amount, Currency, Type, Status, Timestamp. Immutable double-entry ledger. Never manual balance change.
-
-## FLUTTERWAVE/PAYPAL/lOCAL BANK- MANDATORY - OWNER CONNECTS LATER
-NGN, USD, Cards, Bank transfers. A. Wallet Funding B. Virtual Coins C. Gifts D. Subscriptions Monthly/Quarterly/Yearly E. Premium 100% BIAFA F. Withdrawals Min ₦15000 / $10, KYC NIN/BVN/Gov ID, Admin approval, Flutterwave/PayPal/local bank Transfer/Payout. Fee deducted from Creator 60% share. Never expose secret keys to frontend.
-
-## 40/60 COMMISSION
-Net = Gross - Flutterwave/PayPal/local bank Fee - Refunds - Reversals - Legal Deductions. ADMIN = Net x 40%. CREATOR = Net x 60%. Example: ₦10,000 - ₦150 = ₦9,850 Net. Admin ₦3,940. Creator ₦5,910. Example: ₦100,000 Net = Admin ₦40,000 Creator ₦60,000. Apply to Gifts, Tips, Paid Creator Subscriptions, Eligible Paid Content, Agreed Creator Ads. NOT to wallet deposits, coin purchases, refunds, platform Premium, full ad payments. Per-View NOT split again. Calculate in kobo/cents. Never deduct twice. Never split unverified. Ledger reversals for refunds. Preserve historical rate. Commission % configurable ONLY by Super Admin, default 40%.
-
-## 14B PER-VIEW PAY
-Qualified View = 30s+ short, 1m+ long, unique verified user, no self-view, no bot, no VPN. One view per user per video per 24h.
-Tier 1 New: ₦200/1000 = ₦0.20/view. Tier 2 10k followers: ₦500/1000 = ₦0.50/view. Tier 3 100k+/Verified: ₦1000/1000 = ₦1/view.
-Example: 100k views Tier 2 = ₦50,000. Paid by BIAFA from platform revenue, NOT split 40/60 again. 7 days hold. Daily cap ₦50,000. Unlock: 10k followers + 60k mins in 90 days + No violations.
-
-## 14C DATA PASS 
-Nigeria: Daily ₦200 / Weekly ₦1000 / Monthly ₦3500. Ghana: GH₵5 / 25 / 80. USA/UK/Canada: $0.99 / $4.99 / $9.99. Kenya: KSh 50/250/800. SA: R10/50/150. Rest: USA price USD. 60% to Creator Pool, 40% to BIAFA . Data Pass is NOT internet data from MTN/Airtel. It is BIAFA subscription. Later, 50k+ users, integrate MTN/Airtel Sponsored Data OPTIONAL, NOT required to launch.
-
-## 14D GLOBAL SYSTEM
-All revenue into ONE Global Creator Pool. Example: 5000 Nigerians ₦1000 = ₦5,000,000 + 2000 Americans $4.99 = $9,980 + 1000 Ghanaians GH₵25 = GH₵25,000. All into ONE pool. BIAFA 40%, Pool 60%. Creators paid by views, not viewer country. Withdrawals: Nigeria Bank via local Banks Min ₦5000. Ghana/Kenya/SA Bank/Mobile Money Min $10. USA/UK Bank/Wise/PayPal Min $10.
-
-## 14E FREE Videos 
-FREE: Ads every 3-5 videos, unlimited videos/day no limit, SD, no downloads. Views count at Base Rate ₦200/1000 from Ad Pool. After: "viewers can subscribe to BIAFA to help creators this also would be splited 40/60."
-PAID (Data Pass): No ads, HD, download, early access. Views count at Premium Rate ₦500/1000 from Subscription Pool. Worth 2.5x more.every account that pays for data pass their videos will be circulating until it expires, paid daily videos only circlate a day, weekly circulate 0ne week, one month circulate one month on FYP, other video will be there but 5% of all paid account in combined on data pass will appear.
-Formula: (Free Views/1000 x ₦200) + (Paid Views/1000 x ₦500). Example: 80k free = ₦16,000 + 20k paid = ₦10,000 = ₦26,000 total.
-
-## 14F WHY BIAFA BEATS TIKTOK & FACEBOOK
-TikTok: Free+Ads+Fund $0.50-$1/1000 + Gifts 50/50. No Data Pass. No limit.
-Facebook: Free+Ads+In-Stream 55% + Stars 70% + Subscriptions. No Data Pass. No limit.
-BIAFA: Free+Ads+Per-View+Gifts 60/40+Subscriptions+Data Pass+unlimited videos/day. In Africa data is expensive. Data Pass ₦200 feels like buying data. BIAFA gives 60%, better than TikTok 50% and Facebook 55%.
-
-## 14G WATCH DATA REDIRECTION - CORE
-Normal: User buys data from MTN/Airtel/Glo -> Telco keeps 100% -> Creator gets ₦0.
-BIAFA: User buys Data Pass inside BIAFA via local banks-> Money goes to ONE Global BIAFA Pool, NOT to telco -> BIAFA 40% / Creator Pool 60% -> Creators are paid by the amount of views the got on their videos.
-Formula: Creator Pay = (Creator Qualified Views / Total Qualified Views That Week) x Global Creator Pool
-Example Week: 10,000 users x ₦1000 = ₦10,000,000 Total. BIAFA ₦4,000,000. Pool ₦6,000,000. Total Views 1,000,000. Creator A 200k views = 20% = ₦1,200,000. Creator B 100k = 10% = ₦600,000. Creator C 50k = 5% = ₦300,000. No views = ₦0. Views = Money.
-Every Monday 00:00, auto job calculates and credits Wallet as "Data Pass Earnings". Creator withdraws via local bank/PayPal/wise Min ₦15000/$10.
-RULE: Never send Data Pass money to telco. Goes to DataPassPool table. Every Qualified View recorded: Viewer ID, Creator ID, Video ID, Watch Duration, Is Paid, Country. Show in Dashboard: "Your Data Pass Earnings This Week: ₦X - From Y Views - Share Z%"
-
-## ADMIN FINANCIAL DASHBOARD
-Total revenue, Admin commission, Creator earnings, Payment volume, Deposits, Withdrawals, Pending, Successful, Failed, Refunds, Chargebacks, Flutterwave/wise/PayPal/local bankfees, Daily/Weekly/Monthly/Yearly. Charts, Search, Filters, Export CSV/PDF. Commission settings page.
-
-## super admin SWITCH 
-a table where 
-supabase, project URL and anon key 
-cloudinary, API, API secret+ upload preset.
-cloudflare,add site 
- flutterwave,API, public key, secret key, secret hash, payment links, and payment link for data pass.
-will be connected by myself.this would be visible to only super admin.
-
-## CREATOR DASHBOARD
-Followers, Views, Engagement, Gifts, Subscriptions, Ad income, Gross, Fees, Admin commission, Creator 60%, Available, Pending, Withdrawal history. Show Free vs Paid Views separately, Per-View separately.
-Verification: 10k+ followers + ID + No violations 90 days. Monetization: 10k+ + 60k mins 90 days + No violations. Live: 1k+ + 30 days.
-
-## ADVERTISING
-Create campaigns, Videos/Images, Budgets, Duration, Target audience, Impressions, Clicks. Admin approval. Flutterwave/paypay/banks/wise For creator-partnered ads, split ONLY agreed creator share.
-
-## ADMIN PANEL + PROTECTION
-View all users, Search, Suspend, Ban, Verify, Reports, Moderate, Groups, Ads, Withdrawals, Payments, Wallet, Commission %, Gifts, Subscriptions, Fees, Premium, Announcements, Audit logs, Staff. Roles: Super Admin, Admin, Moderator, Finance, Support, User. Only Finance can do financial ops.
-
-## SECURITY
-Argon2/bcrypt, Secure sessions, RBAC, Validation, SQL injection, XSS, CSRF, Rate limiting, Secure uploads, Webhook signature verification, Payment verification, Idempotency, Immutable logs, Encryption, Secrets management, Backup, Privacy, Deletion, Audit trails, Appeal. NDPC, GDPR. Legal review before real-money launch. Licensed payment/payout arrangement.
-
-## MODERATION
-Report post/video/account, Block, Mute, Spam detection, Queue, Notes, Suspension, Appeal, Guidelines, Age restrictions.
-
-## NAVIGATION
-Mobile bottom: Home, Discover, Create, Videos, Profile. Accessible: Messages, Notifications, Wallet, Groups, Creator dashboard, Settings. Desktop sidebar: Home, Discover, Videos, Friends, Messages, Notifications, Groups, Wallet, Creator Studio, Profile.
-
-## 44 PAGES
-Landing, Registration, Login, Forgot password, Home feed, Video feed, Discover, Create post, Video upload, Stories, Live, User profile, Friends, Followers, Following, Messaging, Notifications, Groups, Group details, Wallet, Wallet funding, Virtual coins, Gift shop, Creator dashboard, Creator earnings, Withdrawal requests, Subscription plans, Premium, Data Pass Purchase, Advertising dashboard, Business profiles, Admin dashboard, Admin financial dashboard, Commission settings, Payment management, User management, Content moderation, Reports, Privacy settings, Security settings, Help, Terms, Privacy policy, Community guidelines.
-
-## DATABASE TABLES
-Users, Profiles, Sessions, Posts, PostMedia, Comments, Reactions, Videos, VideoViews, Stories, StoryViews, Friends, Follows, Conversations, ConversationMembers, Messages, Notifications, Groups, GroupMembers, Hashtags, Wallets, WalletTransactions, LedgerAccounts, LedgerEntries, PaymentReferences, Flutterwave/PayPal/local bank/wise Events, CreatorEarnings, CommissionRecords, Gifts, GiftTransactions, VirtualCoins, CoinTransactions, Subscriptions, SubscriptionPayments, DataPassPurchases, DataPassPool, PerViewEarnings, WithdrawalRequests, PayoutTransactions, PayoutAccounts, KYCVerifications, Advertisements, AdCampaigns, AdImpressions, Reports, ModerationActions, AdminRoles, Permissions, AuditLogs, PlatformSettings.
-
-## TESTING
-Registration, Login, Password recovery, Authorization, Posts, Likes, Comments, Following, Friends, Messaging, Uploads, Playback, Stories, Flutterwave/PayPal/localbank/wisecheckout, Payment verification, Wallet deposits, Duplicate prevention, Revenue split, Admin 40%, Creator 60%, Failed payments, Refunds, Chargebacks, Withdrawals, Payout failures, Ledger consistency, Per-View calculation, Free vs Paid views, Data Pass purchase, Free limit 50/day.
-Financial test: ₦10,000 - ₦150 = ₦9,850 Net. Admin ₦3,940, Creator ₦5,910, Combined ₦9,850.
-Per-View test: 100k views Tier 2 = ₦50,000. Free 80k x ₦200/1000 = ₦16,000 + Paid 20k x ₦500/1000 = ₦10,000 = ₦26,000 total.
-
-## netlify drop PROTECTION - OWNER ONLY
-PRIVATE repo BIAFA-app. Never Public. .gitignore as above. NEVER commit .env, API keys, Flutterwave/PayPal/localbanks/wise Secret, Cloudinary Secret, DB URL, JWT Secret, Super Admin password. If committed, ROTATE immediately. Use netlify drop Secrets > Actions. Branch Protection: Require PR, Require 1 approval from Owner, Require status checks. No direct push to main except Owner. Collaborators: Only Owner invites. Developers "Write" only, NEVER "Admin". Remove after work. CODEOWNERS = Owner. Audit Log weekly. Laptop password + 2FA on netlify drop mandatory.
-
-## LEGAL - TERMS, PRIVACY, GUIDELINES
-Terms Last Updated: Nov 7, 2026. Company: BIAFA. Contact: support@biafa.com. 13+ to join, 18+ to earn. You own content, give BIAFA license to display. No impersonation, spam, hacking, fake followers/views, illegal, fraud, money laundering. Coins virtual, no cash value until eligible activity, non-refundable except where law requires. Gifts final unless fraud. Subscriptions via Flutterwave/PayPal/local bank/wise Payment Link + manual reminder. Premium 100% BIAFA. Data Pass is NOT MTN/Airtel data. Earnings 40/60 on Net only. Wallet NOT bank. Funds via Flutterwave/PayPal/localbanks/Licensed Partner. Min ₦5000/$10. 18+ KYC NIN/BVN/Gov ID. Admin approval. Up to 7 business days. Fee deducted from Creator 60%. Termination, Liability max = amount paid in last 12 months. Governing Law: Federal Republic of Nigeria or any other countries.
-Privacy: Collect Account, Content, Usage, Financial. We do NOT store full card details - Flutterwave/PayPal/local bank does. Share with Flutterwave/PayPal/local bank, Cloudinary/Mux/Agora, Legal Authorities when required. We do NOT sell personal data. Rights NDPC/GDPR: Access, Correct, Delete, Download. Retention: Financial/audit logs up to 7 years. Children 13+.
-Guidelines: Be real, safe, respectful. No violence, hate, harassment, self-harm, dangerous acts, nudity/sexual, minor safety ZERO TOLERANCE, exploitation, spam, fake engagement, illegal goods, copyright, privacy/hacking. Penalties: 1st Warning + Remove, 2nd-3rd Block 1-7 days, Severe/Repeated Permanent Ban. Appeal Settings > Help > Appeal within 7 days. Anyone can report anyone incl. Admins. Admin reports reviewed by Super Admin only.
+<script>
+let cfg=JSON.parse(localStorage.getItem('biafa_cfg_all')||'{}');
+let supa=null;function initAll(){let s=[];if(cfg.supaUrl&&cfg.supaKey){try{supa=window.supabase.createClient(cfg.supaUrl,cfg.supaKey);s.push('Supabase ✅');}catch(e){s.push('Supabase ❌');}}else s.push('Supabase ❌ Not Connected');s.push(cfg.cloudName?'Cloudinary ✅':'Cloudinary ❌');s.push(cfg.fwPub?'Flutterwave ✅':'Flutterwave
